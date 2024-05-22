@@ -1,23 +1,33 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
-class UsuarioCustomizado(AbstractBaseUser,PermissionsMixin):
-     email = models.EmailField("endereço de email", unique=True)
-     is_staff = models.BooleanField(default=False)
-     is_active = models.BooleanField(default=True)
-     telefone = models.CharField(max_length=15, null=True, blank=True)
-     endereco = models.CharField(max_length=200)
-     cpf = models.CharField(max_length=20)
-     is_email_verified = models.BooleanField(default=False)
+from .customManager import Gerenciador
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
+class UsuarioCustomizado(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField("endereço de email", unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    telefone = models.CharField(max_length=15, null=True, blank=True)
+    endereco = models.CharField(max_length=200)
+    cpf = models.CharField(max_length=20)
+    is_email_verified = models.BooleanField(default=False)
+    
+    # Adicionando related_name aos campos ManyToMany
+    groups = models.ManyToManyField(
+        "auth.Group", related_name="usuario_customizado_groups", blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        "auth.Permission", related_name="usuario_customizado_user_permissions", blank=True
+    )
 
-     objects = CustomManager() #criar customManager Rodrigol
+    objects = Gerenciador()
 
-     USERNAME_FIELD = "email"
-     REQUIRED_FIELDS = []
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
-     def __str__(self):
-          return self.email
-     
+    def __str__(self):
+        return self.email
 
 class Foto(models.Model):
     url = models.CharField(max_length=3000)
@@ -80,18 +90,18 @@ class Livros(models.Model):
     nota = models.IntegerField()
     valor = models.DecimalField(max_digits=5, decimal_places=2)
     quantidade = models.IntegerField()
-    autor = models.ForeignKey(UsuarioCustomizado, related_name='autorLivro', on_delete=models.CASCADE)
+    autor = models.CharField( max_length=50)
     descricao = models.TextField()
     editora = models.CharField(max_length=30)
     idade = models.CharField(choices=CLASSIFICACAO_INDICATIVA, max_length=35)
     dataLancamento = models.DateField(auto_now_add=True)
     publicacao = models.DateField()
     categoria = models.CharField(choices=CATEGORIA_LIVRO, max_length=30)
-    fotoFK = models.ForeignKey(Foto, related_name='fotoLivro', on_delete=models.CASCADE)
+    fotoFK = models.ManyToManyField(Foto)
     numeroPaginas = models.IntegerField()
     formato = models.CharField(choices=FORMATO_LIVRO, max_length=30)
     codEdicao = models.CharField(max_length=25)
-    aprovado = models.CharField(choices=APROVACAO_LIVRO, max_length=25)
+    aprovado = models.CharField(choices=APROVACAO_LIVRO, max_length=25, default="P")
 
     def __str__(self):
         return self.titulo
@@ -106,19 +116,19 @@ STATUS_EMPRESTIMO = [
 
 
 class Emprestimo(models.Model):
-    usuarioFK = models.ForeignKey(UsuarioCustomizado, related_name='usuarioEmprestimo', on_delete=models.CASCADE)
+    usuarioFK = models.ForeignKey(UsuarioCustomizado, related_name='usuarioEmprestimo0', on_delete=models.CASCADE)
     dataEmprestimo = models.DateField(auto_now_add=True)
     devolucaoPrevista = models.DateField() #duas semanas depois da data emprestimo
     dataDevolucao = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_EMPRESTIMO)
+    status = models.CharField(max_length=20, choices=STATUS_EMPRESTIMO, default='P')
 
     def __str__(self):
             return self.status
 
 class EmprestimoLivros(models.Model):
-     livroFK = models.ForeignKey(Livros, related_name='Emprestimo_livro', on_delete=models.CASCADE)
+     livroFK = models.ForeignKey(Livros, related_name='Emprestimo_livr0o', on_delete=models.CASCADE)
      quantidade = models.IntegerField()
-     emprestimoFK = models.ForeignKey(Emprestimo, related_name='livro_Emprestimo', on_delete=models.CASCADE)
+     emprestimoFK = models.ForeignKey(Emprestimo, related_name='livro_Emprestimo0', on_delete=models.CASCADE)
 
      def __str__(self):
             return self.livroFK.titulo
