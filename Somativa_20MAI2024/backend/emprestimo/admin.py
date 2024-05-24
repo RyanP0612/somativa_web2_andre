@@ -29,20 +29,14 @@ admin.site.register(UsuarioCustomizado, CustomUserAdmin)
 # Adicione os related_names nos acessos reversos para evitar colisões
 UsuarioCustomizado.groups.field.related_name = 'custom_user_groups'
 UsuarioCustomizado.user_permissions.field.related_name = 'custom_user_permissions'
-class AdminFoto(admin.ModelAdmin):
-    list_display = ['id', 'url']
-    list_display_links = ('id', 'url')
-    search_fields = ('url',)
-    list_per_page = 10
-admin.site.register(Foto, AdminFoto)
+
 
 class AdminLivros(admin.ModelAdmin):
     list_display = ['id', 'titulo', 'autor', 'editora', 'categoria', 'nota', 'valor', 'quantidade', 'idade', 'dataLancamento', 'publicacao', 'numeroPaginas', 'formato', 'codEdicao', 'aprovado']
     list_display_links = ('id', 'titulo', 'autor', 'editora')
-    search_fields = ('titulo', 'autor__username', 'editora', 'categoria')
+    search_fields = ('titulo', 'autor', 'editora', 'categoria')
     list_filter = ('categoria', 'idade', 'formato', 'aprovado')
     date_hierarchy = 'dataLancamento'
-    filter_horizontal = ('fotoFK',)
     list_per_page = 10
 
 admin.site.register(Livros, AdminLivros)

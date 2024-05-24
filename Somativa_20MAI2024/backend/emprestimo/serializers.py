@@ -10,19 +10,10 @@ class UsuarioCustomizadoSerializer(serializers.ModelSerializer):
 
 
 
-class FotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        models = Foto
-        fields = '__all__'
-        many = True
+
 
 class LivrosSerializer(serializers.ModelSerializer):
-    #fotos = FotoSerializer(read_only=True) #fazer o join com tabelas separadas
-    fotoFK = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='url'
-    ) #join com many to many field
+
  
     class Meta:
         model = Livros
@@ -31,7 +22,7 @@ class LivrosSerializer(serializers.ModelSerializer):
 
 
 class EmprestimoSerializer(serializers.ModelSerializer):
-    #usuarioFK = UsuarioCustomizadoSerializer(read_only=True)
+
     class Meta:
         model = Emprestimo
         fields = '__all__'

@@ -29,12 +29,7 @@ class UsuarioCustomizado(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-class Foto(models.Model):
-    url = models.CharField(max_length=3000)
 
-    def __str__(self):
-        return self.url
-    
 
 
 CLASSIFICACAO_INDICATIVA = [
@@ -87,7 +82,7 @@ APROVACAO_LIVRO = [
 
 class Livros(models.Model):
     titulo = models.CharField(max_length=45)
-    nota = models.IntegerField()
+    nota = models.IntegerField(null=True, blank=True, default=0)
     valor = models.DecimalField(max_digits=5, decimal_places=2)
     quantidade = models.IntegerField()
     autor = models.CharField( max_length=50)
@@ -97,7 +92,7 @@ class Livros(models.Model):
     dataLancamento = models.DateField(auto_now_add=True)
     publicacao = models.DateField()
     categoria = models.CharField(choices=CATEGORIA_LIVRO, max_length=30)
-    fotoFK = models.ManyToManyField(Foto)
+    fotoFK = models.CharField(max_length=3000)
     numeroPaginas = models.IntegerField()
     formato = models.CharField(choices=FORMATO_LIVRO, max_length=30)
     codEdicao = models.CharField(max_length=25)
