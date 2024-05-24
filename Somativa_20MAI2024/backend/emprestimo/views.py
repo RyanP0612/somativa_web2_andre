@@ -48,30 +48,22 @@ class UsuarioCustomizadoView(ModelViewSet):
         return queryset
 
 
-
-
-class EmprestimoLivrosView(APIView):
+class EmprestimoLivrosView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
-
+    def create(self, request, *args, **kwargs):
         user = request.user
-
-    
         emprestimoAtivo = Emprestimo.objects.filter(usuarioFK=user, dataDevolucao__isnull=True).count()
         if emprestimoAtivo >= 3:
             return Response({'error': 'Você já possui 3 empréstimos corintiano ladrao'}, status=status.HTTP_400_BAD_REQUEST)
-
-    
+        
         livro_id = request.data.get('livro_id')
         try:
             livro = Livros.objects.get(id=livro_id, aprovado="A")
-            
         except Livros.DoesNotExist:
             return Response({'error': 'Livro não disponível ou não encontrado'}, status=status.HTTP_404_NOT_FOUND)
         
         if livro.quantidade > 0:
-            
             # Crie o empréstimo (Emprestimo) se necessário
             emprestimo, created = Emprestimo.objects.get_or_create(usuarioFK=user, dataDevolucao__isnull=True, defaults={'devolucaoPrevista': (datetime.date.today() + datetime.timedelta(weeks=2))})
 
@@ -83,16 +75,14 @@ class EmprestimoLivrosView(APIView):
             serializer = EmprestimoLivrosSerializer(emprestimo_livro)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(status='deu erro viado')
+            return Response({'error': 'Quantidade do livro insuficiente'}, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request, *args, **kwargs):
         user = request.user
-
         emprestimos = Emprestimo.objects.filter(usuarioFK=user, dataDevolucao__isnull=True)
-
-
         serializer = EmprestimoSerializer(emprestimos, many=True)
         return Response(serializer.data)
-    
+
     
 class EmprestimoView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
@@ -100,7 +90,6 @@ class EmprestimoView(ModelViewSet):
     serializer_class = EmprestimoSerializer
     
 class LivrosView(ModelViewSet):
-    permission_classes = (IsAuthenticated,)
     queryset = Livros.objects.all() 
     serializer_class = LivrosSerializer
 
