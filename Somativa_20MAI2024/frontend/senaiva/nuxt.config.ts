@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
   primevue: {
     components: {
-      include: ['carousel', 'Carousel']
+      include: ['carousel', 'Carousel', 'toast', 'Toast']
     }
   },
 
@@ -20,5 +20,8 @@ css: [
   'primevue/resources/themes/aura-light-green/theme.css', // css tema dos componentes primevue
   '~/assets/style/global-project.scss',  //css global customizado para toda a aplicação
 ],
+plugins: [
+  '@/plugins/primevue' // Importa e registra o PrimeVue globalmente
+]
 
 })

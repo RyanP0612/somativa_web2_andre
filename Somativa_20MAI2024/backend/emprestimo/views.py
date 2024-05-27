@@ -92,4 +92,22 @@ class EmprestimoView(ModelViewSet):
 class LivrosView(ModelViewSet):
     queryset = Livros.objects.all() 
     serializer_class = LivrosSerializer
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)  # Retorna o objeto criado com status 201 Created
+        else:
+            return Response(serializer.errors, status=400)  # Retorna os erros de validação com status 400 Bad Request
+    def list(self, request, *args, **kwargs):
+        # Verifica se o parâmetro 'aprovado' foi fornecido na consulta
+        aprovado = request.query_params.get('aprovado')
+        print(aprovado)
+        if aprovado == 'A' or aprovado == 'P' or aprovado == 'C':
+            # Filtra os objetos onde 'aprovado' é igual a 'A'
+            queryset = self.get_queryset().filter(aprovado=aprovado)
+        else:
+            queryset = self.get_queryset()  # Retorna todos os livros se 'aprovado' não estiver especificado ou for diferente de 'A'
 
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

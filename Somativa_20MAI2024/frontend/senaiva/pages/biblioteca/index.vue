@@ -5,7 +5,7 @@ import 'primevue/resources/themes/saga-blue/theme.css'; // Tema do PrimeVue
 import 'primevue/resources/primevue.min.css'; // Estilos gerais do PrimeVue
 import 'primeicons/primeicons.css'; // Ícones do PrimeIcons
 
-const { data } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
+const { data } = await useFetch('http://localhost:8000/livros/?aprovado=P', {
   key: 'usuarioRequest',
 });
 

@@ -2,16 +2,22 @@
     <div>
       <div class="header">
         <NuxtLink to="/" exact :key="$route.path">
-          <button id="home-button" @click="reloadPage">Home</button>
+          <button class="btn-primary" id="home-button" @click="reloadPage">Home</button>
         </NuxtLink>
         <br>
         <NuxtLink to="/autor" exact :key="$route.path">
-          <button id="autor-button" @click="reloadPage">Autor</button>
+          <button class="btn-primary" id="autor-button" @click="reloadPage">Autor</button>
         </NuxtLink>
         <br>
         <NuxtLink to="/livros" exact :key="$route.path">
-          <button id="livros-button" @click="reloadPage">Livros</button>
+          <button class="btn-primary" id="livros-button" @click="reloadPage">Livros</button>
         </NuxtLink>
+        <br>
+        <NuxtLink to="/biblioteca" exact :key="$route.path">
+          <button class="btn-primary" id="autor-button" @click="reloadPage">bibliotecária</button>
+        </NuxtLink>
+      
+        <button @click="openLink('http://127.0.0.1:8000/admin')" class="btn-primary">⚙️</button>
         <img class="ibagem" src="assets/img/biblio.png" alt="Profile Image">
       </div>
       <div class="section">
@@ -29,7 +35,10 @@
         if (link === this.$route.path) {
           window.location.reload();
         }
-      }
+      },
+      openLink(url) {
+      window.location.href = url;
+    }
     }
   }
   </script>
@@ -59,10 +68,16 @@
     justify-content: center;
     align-items: center;
   }
+
   .gradient_linha {
     width: 100%;
     height: 0.3rem;
     background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
   }
+  .btn-primary {
+  border-color: yellow;
+  color: black;
+ 
+}
   </style>
   

@@ -1,80 +1,140 @@
-<script >
-export default {
-    name: 'indexAutor',
+<script setup>
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
 
-    data() {
-        return {
-            currentStep: 0,
-            steps: [],
-            livro: {
-                titulo: '',
-                valor: '',
-                quantidade: '',
-                autor: '',
-                descricao: '',
-                editora: '',
-                idade: '',
-                publicacao: '',
-                categoria: '',
-                url: '',
-                n_pag: '',
-                formato: '',
-                Cod: '',
-            }
-        }
-    },
+const show = (severity, summary, detail ) => {
+    toast.add({ severity: severity, summary: summary, detail: detail, life: 3000 });
+};
+import { ref, computed } from 'vue';
 
-    computed: {
-        isFirstIndex() {
-            return this.currentStep === 0
-        },
-        isLastIndex() {
-            return this.currentStep === this.steps.length - 1
-        }
-    },
-    created() {
-        this.steps = [
-            { title: 'Sobre o livro' },
-            { title: 'Classificações' },
-            { title: 'Informações finais' }
-        ]
-    },
-    methods: {
-        backToPrevStep() {
-            if (!this.isFirstIndex) {
-                this.currentStep -= 1
-            }
-        },
-        goToNextStep() {
-            if (!this.isLastIndex) {
-                this.currentStep += 1
-            }
-        },
-        submit() {
-            console.log('save data', this.livro)
-        }
+const steps = ref([
+  { title: 'Sobre o livro' },
+  { title: 'Classificações' },
+  { title: 'Informações finais' }
+]);
+
+const currentStep = ref(0);
+const livro = ref({
+  titulo: '',
+  autor: '',
+  editora: '',
+  descricao: '',
+  url: '',
+  categoria: '',
+  idade: '',
+  formato: '',
+  publicacao: '',
+  valor: null,
+  n_pag: null,
+  quantidade: null,
+  Cod: ''
+});
+
+const isFirstIndex = computed(() => currentStep.value === 0);
+const isLastIndex = computed(() => currentStep.value === steps.value.length - 1);
+
+const backToPrevStep = () => {
+  if (!isFirstIndex.value) {
+    currentStep.value -= 1;
+  }
+};
+
+const goToNextStep = () => {
+  if (!isLastIndex.value) {
+    currentStep.value += 1;
+  }
+};
+
+
+
+const validateForm = () => {
+  let valid = true;
+
+  // Validação para a primeira etapa
+  if (currentStep.value === 0) {
+    if (!livro.value.titulo || !livro.value.autor || !livro.value.editora || !livro.value.descricao || !livro.value.url) {
+      valid = false;
     }
-}
-</script>
-<template>
+  }
+
+  // Validação para a segunda etapa
+  if (currentStep.value === 1) {
+    if (!livro.value.categoria || !livro.value.idade || !livro.value.formato || !livro.value.publicacao) {
+      valid = false;
+    }
+  }
+
+  // Validação para a terceira etapa
+  if (currentStep.value === 2) {
+    if (!livro.value.valor || !livro.value.n_pag || !livro.value.quantidade || !livro.value.Cod) {
+      valid = false;
+    }
+  }
+
+  return valid;
+};
+const handleSubmit = async () => {
+  if (validateForm()) {
+    console.log('Formulário válido:', livro.value);
     
-    <div class="page">
-        <header class="page__header" >
+    try {
+      const response = await fetch('http://localhost:8000/livros/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          titulo: livro.value.titulo,
+          autor: livro.value.autor,
+          editora: livro.value.editora,
+          descricao: livro.value.descricao,
+          fotoFK: livro.value.url,
+          categoria: livro.value.categoria,
+          idade: livro.value.idade,
+          formato: livro.value.formato,
+          publicacao: livro.value.publicacao,
+          valor: livro.value.valor,
+          numeroPaginas: livro.value.n_pag,
+          quantidade: livro.value.quantidade,
+          codEdicao: livro.value.publicacao
+        }),
+      });
 
-            <div class="stepper">
+      const data = await response.json();
+      console.log('Resposta do servidor:', data);
+      show('success', 'Campos preenchidos', 'Dados enviados com sucesso!');
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+      show('error', 'Erro', 'Ocorreu um erro ao enviar os dados.');
+    }
+  } else {
+    console.log('Por favor, preencha todos os campos.');
+    show('error', 'Campos não preenchidos', 'Por favor preencha todos os campos!!!');
+  }
+};
 
-                <span v-for="(step, index) in steps" :key="step.title" :class="{'stepper__item--active': currentStep == index}">
-                    {{ index + 1  }} - {{ step.title }}
+</script>
 
-                
-                </span>
-            </div>
-
-        </header>
-        <section class="page__content">
-            <form>
-                <!-- Etapa sobre o livro -->
-                <template v-if="currentStep == 0">
+<template>
+  <div>
+    <CustomLayout />
+  <div class="page">
+    
+    <header class="page__header">
+      <div class="stepper">
+        <span
+          v-for="(step, index) in steps"
+          :key="step.title"
+          :class="{'stepper__item--active': currentStep === index}"
+        >
+          {{ index + 1 }} - {{ step.title }}
+        </span>
+      </div>
+    </header>
+    <section class="page__content">
+      <form @submit.prevent="handleSubmit">
+        <!-- Etapa sobre o livro -->
+        <template v-if="currentStep == 0">
                     <div class="form__row">
                         <div class="form__field">
                             <label for="titulo">Título</label>
@@ -90,7 +150,13 @@ export default {
                         </div>
                         <div class="form__field">
                             <label for="descricao">Descrição</label>
-                            <input id="descricao" v-model="livro.descricao"  type="text">
+                            <textarea
+                            id="descricao"
+                            v-model="livro.descricao"
+                            class="auto-resize"
+                            @input="resizeTextarea"
+                            rows="1"
+                            ></textarea>
                         </div>
                         <div class="form__field">
                             <label for="fotoFK">Foto(url)</label>
@@ -98,24 +164,58 @@ export default {
                         </div>
                     </div>
                 </template>
+                
                 <!-- etapa de classificação -->
                 <template v-if="currentStep == 1">
                     <div class="form__row">
                         <div class="form__field">
                             <label for="categoria">Categoria</label>
-                            <input id="categoria" v-model="livro.categoria"  type="text">
+                            <!-- <input id="categoria" v-model="livro.categoria"  type="text">
+                             -->
+                             <select name="categorias" id="categoria" v-model="livro.categoria">
+                                <option value="T" >Terror😱</option>
+                                <option value="R">Romance💓</option>
+                                <option value="A">Aventura🧗</option>
+                                <option value="M">Mistério🕵️‍♂️</option>
+                                <option value="FC" >Ficção científica🧟</option>
+                                <option value="D">Drama😭</option>
+                                <option value="C" >Crime🦹</option>
+                                <option value="H">História📖</option>
+                                <option value="B">Biografia👴</option>
+                                <option value="E">Ensino✍️</option>
+                                <option value="AA" >Autoajuda🧘‍♀️</option>
+                                <option value="F">Fantasia🥷</option>
+                                <option value="LIJ">Infanto-juvenil👨‍👩‍👧‍👦</option>
+          
+                            </select>
+                             
                         </div>
                         <div class="form__field">
                             <label for="idade">Classificação Indicativa</label>
-                            <input id="idade" v-model="livro.idade"  type="text">
+                            <!-- <input id="idade" v-model="livro.idade"  type="text"> -->
+                            <select name="idades" id="idade" v-model="livro.idade">
+                                <option value="L" >Livre</option>
+                                <option value="10">10 anos</option>
+                                <option value="12">12 anos</option>
+                                <option value="14">14 anos</option>
+                                <option value="16" >16 anos</option>
+                                <option value="18">18 anos</option>
+          
+                            </select>
+                            
                         </div>
                         <div class="form__field">
                             <label for="formato">Formato</label>
-                            <input id="formato" v-model="livro.formato"  type="text">
+                            <!-- <input id="formato" v-model="livro.formato"  type="text"> -->
+                            <select name="formatos" id="formatinho" v-model="livro.formato">
+                                <option value="E" >EBOOK</option>
+                                <option value="F">Físico</option>
+                       
+                            </select>
                         </div>
                         <div class="form__field">
                             <label for="publicacao">Data de Publicação</label>
-                            <input id="publicacao" v-model="livro.publicacao"  type="text">
+                            <input id="publicacao" v-model="livro.publicacao"  type="date">
                         </div>
                     </div>
                 </template>
@@ -124,39 +224,50 @@ export default {
                     <div class="form__row">
                         <div class="form__field">
                             <label for="valor">Valor do livro para empréstimo</label>
-                            <input id="valor" v-model="livro.valor"  type="text">
+                            <input id="valor" v-model="livro.valor"  type="number">
                         </div>
                         <div class="form__field">
                             <label for="n_pag">Número de páginas</label>
-                            <input id="n_pag" v-model="livro.n_pag"  type="text">
+                            <input id="n_pag" v-model="livro.n_pag"  type="number" step="1">
                         </div>
                         <div class="form__field">
                             <label for="quantidade">Quantidade de livros disponíveis</label>
-                            <input id="quantidade" v-model="livro.quantidade"  type="text">
+                            <input id="quantidade" v-model="livro.quantidade"  type="number" step="1">
                         </div>
                         <div class="form__field">
                             <label for="cod">Código do Livro</label>
                             <input id="cod" v-model="livro.Cod"  type="text">
                         </div>
-                    </div>
-                </template>
-                
-            </form>
-            <div class="page__footer">
-                <button type="button" class="btn-primary" :disabled="isFirstIndex"
-                @click="backToPrevStep">
-            Voltar</button>
-            <button v-if="isLastIndex" type="button" class="btn-primary" @click="submit">
-            Salvar</button>
-            <button v-else
-            type="button"
-            class="btn-primary"
-            @click="goToNextStep">
-        Próximo</button>
-            </div>
+                        <div class="card flex justify-content-center">
 
-        </section>
     </div>
+                    </div>
+                    
+                </template>
+      </form>
+      <div class="page__footer">
+        <button type="button" class="btn-primary" :disabled="isFirstIndex" @click="backToPrevStep">
+          Voltar
+        </button> 
+       
+        <Toast />
+        <button v-if="isLastIndex" type="button" class="btn-primary" @click="handleSubmit">
+          Salvar
+        </button>
+        
+        <button v-else type="button" class="btn-primary" @click="goToNextStep">
+        
+          Próximo
+        </button>
+       
+        
+        
+        
+      </div>
+    </section>
+    
+  </div>
+  </div>
 </template>
 
 
@@ -165,7 +276,14 @@ export default {
 
 
 
+
 <style scoped>
+.auto-resize {
+  width: 100%;
+  box-sizing: border-box; /* Para garantir que o padding e o border não afetam o width */
+  overflow: hidden; /* Esconde a barra de rolagem */
+  resize: none; /* Evita que o usuário redimensione manualmente */
+}
 .page {
   width: 100%;
   height: 100vh;
@@ -233,6 +351,7 @@ form {
   color: rgba(0, 0, 0, 0.75);
 }
 .form__field input,
+.form__field textarea,
 .form__field select {
   width: 100%;
   background: #fafafa;

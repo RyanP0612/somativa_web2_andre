@@ -12,14 +12,28 @@ class UsuarioCustomizadoSerializer(serializers.ModelSerializer):
 
 
 
-class LivrosSerializer(serializers.ModelSerializer):
 
- 
+class LivrosSerializer(serializers.ModelSerializer):
+    idade_display = serializers.SerializerMethodField()
+    categoria_display = serializers.SerializerMethodField()
+    formato_display = serializers.SerializerMethodField()
+    aprovado_display = serializers.SerializerMethodField()
+
+    def get_idade_display(self, obj):
+        return dict(CLASSIFICACAO_INDICATIVA).get(obj.idade)
+
+    def get_categoria_display(self, obj):
+        return dict(CATEGORIA_LIVRO).get(obj.categoria)
+
+    def get_formato_display(self, obj):
+        return dict(FORMATO_LIVRO).get(obj.formato)
+
+    def get_aprovado_display(self, obj):
+        return dict(APROVACAO_LIVRO).get(obj.aprovado)
+
     class Meta:
         model = Livros
         fields = '__all__'
-        many = True
-
 
 class EmprestimoSerializer(serializers.ModelSerializer):
 
