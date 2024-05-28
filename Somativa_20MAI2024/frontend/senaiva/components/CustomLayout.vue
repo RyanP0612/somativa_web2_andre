@@ -18,7 +18,7 @@
         </NuxtLink>
       
         <button @click="openLink('http://127.0.0.1:8000/admin')" class="btn-primary">⚙️</button>
-        <img class="ibagem" src="assets/img/biblio.png" alt="Profile Image">
+        <img class="ibagem" src="assets/img/logoInit.svg" alt="Profile Image">
       </div>
       <div class="section">
         <h2>Senaiva</h2>
@@ -47,23 +47,23 @@
   .header {
     width: 100%;
     height: 3rem;
-    background-color: #010200;
+    background-color: #291400;
     color: white;
     display: flex;
-    justify-content: space-between;
+    justify-content:center;
     align-items: center;
     padding: 0 1rem;
   }
   .ibagem {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-left: 1rem;
-  }
+  width: 5vw;
+  border-radius: 50%;
+  margin-top: 25px; 
+  margin-left: 80px;
+}
   .section {
     width: 100%;
     height: 2rem;
-    background-color: #000000;
+    background-color: #291400;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -75,8 +75,21 @@
     background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
   }
   .btn-primary {
-  border-color: yellow;
-  color: black;
+    width: auto;
+  font-size: 1vh;
+  padding: 10px 10px;
+  margin: 20px;
+  border: none;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #291400;
+  background: #dda432;
+  cursor: pointer;
+  box-shadow: 0px 10px 40px -12px #70541c
  
 }
   </style>

@@ -55,14 +55,19 @@ const { data } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
   background-repeat: repeat;
   background-size: cover;
   color: white;
+  
 }
 .car-card {
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  padding: 20px;
+  width: auto;
+  background-color: #5a2e01;
+  border-radius: 15px;
+  padding: 20px 10px;
   margin: 10px;
   text-align: center;
-  color: black;
+  color: #dda432;
+  font-weight: 800;
+  font-size: 1.2vw ;
+  letter-spacing: 2px;
 }
 .image-card {
   max-width: 100%; /* Manter a imagem dentro do container */
