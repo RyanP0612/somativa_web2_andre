@@ -70,46 +70,55 @@
   <style scoped>
 
   .page {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #fafafa;
+    overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('assets/img/fundo.png');
   }
   
   .page__header {
     width: 100%;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    border-bottom: 1px solid #ededed;
-    box-shadow: 0 2px 8px #cecece;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3a1d00;
+  background-size: cover;
+  border-bottom: 1px solid #ebab2d;
   }
   
   .stepper {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 38px;
+  font-size: 1vw;
+
+  margin: 0;
+  color: #ebab2d;
+  font-weight: 1000;
   }
-  .stepper__item--active {
-    color: #0ea5e9;
-  }
+
   
   .page__content {
     width: 90%;
-    height: 80vh;
-    margin-top: 25px;
-    border: 1px solid #ededed;
-    border-radius: 6px;
-    padding: 18px;
-    background: #fff;
+  height: 80vh;
+  margin-top: 48px;
+  border: 1px solid #ebab2d;
+  border-radius: 6px;
+  padding: 18px;
+  background: #3a1d00;
 
-    justify-content: space-evenly;
+  /* margin-left: 8px; */
+    font-size: 1vw;
+  font-weight: 800;
+  /* margin: 0; */
+  color: #dda432;
+    justify-content: space-around;
 
     display: flex;
   }
@@ -131,30 +140,9 @@
     flex: 1;
     gap: 8px;
   }
-  .form__field label {
-    margin-left: 8px;
-    font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.75);
-  }
-  .form__field input,
-  .form__field textarea,
-  .form__field select {
-    width: 100%;
-    background: #fafafa;
-    border: 1px solid #ededed;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 1rem;
-    outline: none;
-  }
-  .form__field input:focus,
-  .form__field select:focus {
-    border-color: #0ea5e9;
-  }
-  .form__field-error {
-    font-size: 0.7rem;
-    color: red;
-  }
+
+
+
   
   .page__footer {
     position: absolute;

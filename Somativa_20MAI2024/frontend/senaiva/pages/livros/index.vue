@@ -5,21 +5,30 @@ import 'primevue/resources/themes/saga-blue/theme.css'; // Tema do PrimeVue
 import 'primevue/resources/primevue.min.css'; // Estilos gerais do PrimeVue
 import 'primeicons/primeicons.css'; // Ícones do PrimeIcons
 
-const { data } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
-  key: 'usuarioRequest',
+// Função para remover acentos
+function removeAccents(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+// Fazendo a requisição para obter os dados dos livros
+const { data: livros } = await useFetch('http://localhost:8000/livros/', {
+  key: 'livrosRequest',
 });
 
-
-
-
-
+// Filtrando os livros que contêm "leticia" no título (com ou sem acentos, maiúsculas ou minúsculas)
+const filteredBooksCarousel = livros.value.filter(livro => 
+  removeAccents(livro.titulo).toLowerCase().includes('leticia')
+);
+const filteredBooks = livros.value.filter(livro => 
+  !removeAccents(livro.titulo).toLowerCase().includes('leticia')
+);
 </script>
 <template>
     <div>
         <div class="tela">
       <CustomLayout />
-
-        <Carousel :value="data" :numVisible="3" :numScroll="1" :responsiveOptions="responsiveOptions" >
+      <h2 >🥃 Nossos MELHORES livros💖</h2>
+        <Carousel :value="filteredBooksCarousel" :numVisible="4" :numScroll="1" :responsiveOptions="responsiveOptions" >
           <template #item="{ data: livro }">
             <div class="border-1 surface-border border-round m-2 p-3 car-card">
               <div class="mb-3">
@@ -28,9 +37,13 @@ const { data } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
                   <img :src="livro.fotoFK" :alt="livro.titulo" class="w-full border-round image-card" />
                 </div>
               </div>
-              <div class="mb-3 font-medium">{{ livro.titulo }}</div>
-              <div class="flex justify-content-between align-items-center">
-                <div class="mt-0 font-semibold text-xl">COD: {{ livro.codEdicao }}</div>
+              <div class="flex flex-row">
+      <span>R${{ livro.valor }} - </span>
+      <div class="ml-2">
+        <label>Qtd. Disponível: </label>
+        <span>{{ livro.quantidade }} </span>
+      </div>
+    
                 <span>
                   <NuxtLink :to="`/livros/${livro.id}`">
                   <Button  class="ml-2 p-button-rounded">🔎</Button> 
@@ -41,28 +54,64 @@ const { data } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
             </div>
           </template>
         </Carousel>
-
-
+        <h2 >🥃 Nossos Produtos</h2>
+        <div class="home-container flex  align-items-center">
+        
+        <Toast />
+        <div v-for="(produto,index)  in livros" :key="produto.id" >
+          <NuxtLink :to="`/livros/${produto.id}`">
+            <ProdutoItem :key="index" class="col-3" :produto="produto" @eventoAdicionado="show" />
+          </NuxtLink>
+        </div>
+      </div>
+  </div>
     </div>
-</div>
+
   </template>
 
 <style scoped>
+.home-container {
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 100vw;
+  display: flex;
+ 
+  box-sizing: border-box;
+  flex-wrap: wrap; /* Adiciona flex-wrap para itens que ultrapassam a largura */
+  
+
+}
+
+.p-toast-summary		{
+  padding: 1.5rem !important;
+}
 .tela {
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+  height: auto;
   background-image: url('assets/img/fundo.png');
   background-repeat: repeat;
   background-size: cover;
-  color: white;
   
+  
+}
+.tela > h2{
+  width: auto;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #291400;
+  font-weight: 800;
+  font-size: 1.5vw ;
+  letter-spacing: 2px;
+  background: #dda432;
 }
 .car-card {
   width: auto;
   background-color: #5a2e01;
   border-radius: 15px;
-  padding: 20px 10px;
-  margin: 10px;
+  padding: 25px 15px;
+  margin: 15px;
   text-align: center;
   color: #dda432;
   font-weight: 800;

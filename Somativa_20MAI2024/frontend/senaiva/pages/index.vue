@@ -59,11 +59,14 @@ const libraria = () => {
   flex-direction: column;
 }
 .left-login > h1{
+  margin-top: 65px;
+padding: 20px 20px;
   font-size: 3vw ;
   color: #ebab2d;
 }
 .left-login-img{
-  width: 35vw
+  width: 35vw;
+  margin-top: -100px;
 }
 .right-login{
   width: 50vw;

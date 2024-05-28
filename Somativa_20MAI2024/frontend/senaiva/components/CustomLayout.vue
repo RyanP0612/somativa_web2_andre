@@ -55,7 +55,7 @@
     padding: 0 1rem;
   }
   .ibagem {
-  width: 5vw;
+  width: 6vw;
   border-radius: 50%;
   margin-top: 25px; 
   margin-left: 80px;
@@ -67,16 +67,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #dda432;
   }
 
   .gradient_linha {
     width: 100%;
     height: 0.3rem;
-    background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+    background: #dda432;
   }
   .btn-primary {
     width: auto;
-  font-size: 1vh;
+  font-size: 1.5vh;
   padding: 10px 10px;
   margin: 20px;
   border: none;

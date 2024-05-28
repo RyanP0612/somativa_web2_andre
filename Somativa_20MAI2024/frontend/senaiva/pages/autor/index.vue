@@ -276,21 +276,21 @@ const handleSubmit = async () => {
 
 
 
-
 <style scoped>
 .auto-resize {
   width: 100%;
-  box-sizing: border-box; /* Para garantir que o padding e o border não afetam o width */
-  overflow: hidden; /* Esconde a barra de rolagem */
-  resize: none; /* Evita que o usuário redimensione manualmente */
+  box-sizing: border-box; 
+  /* overflow: hidden;  */
+  /* resize: none;  */
 }
 .page {
+  overflow: hidden;
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #fafafa;
+  background-image: url('assets/img/fundo.png');
 }
 
 .page__header {
@@ -299,9 +299,10 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  border-bottom: 1px solid #ededed;
-  box-shadow: 0 2px 8px #cecece;
+  background: #3a1d00;
+  background-size: cover;
+  border-bottom: 1px solid #ebab2d;
+  /* box-shadow: 0 2px 8px #cecece; */
 }
 
 .stepper {
@@ -310,19 +311,24 @@ const handleSubmit = async () => {
   justify-content: center;
   align-items: center;
   gap: 38px;
+  font-size: 1vw;
+  font-weight: 800;
+  margin: 0;
+  color: #1a0e01;
 }
 .stepper__item--active {
-  color: #0ea5e9;
+  color: #ebab2d;
+  font-weight: 1000;
 }
 
 .page__content {
   width: 90%;
   height: 80vh;
   margin-top: 48px;
-  border: 1px solid #ededed;
+  border: 1px solid #ebab2d;
   border-radius: 6px;
   padding: 18px;
-  background: #fff;
+  background: #3a1d00;
   position: relative;
 }
 
@@ -347,19 +353,24 @@ form {
 }
 .form__field label {
   margin-left: 8px;
-  font-size: 0.8rem;
-  color: rgba(0, 0, 0, 0.75);
+  font-size: 1vw;
+  font-weight: 800;
+  margin: 0;
+  color: #dda432;
 }
 .form__field input,
 .form__field textarea,
 .form__field select {
   width: 100%;
-  background: #fafafa;
-  border: 1px solid #ededed;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  background: #8a786694;
+  color: #f0ffffde;
+  font-size: 12pt;
+  box-shadow: 0px 10px 40px #00000056;
   outline: none;
+  box-sizing: border-box;
 }
 .form__field input:focus,
 .form__field select:focus {
@@ -375,7 +386,7 @@ form {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 48px;
+  height: 70px;
   display: flex;
   justify-content: space-between;
   padding-left: 18px;
@@ -393,9 +404,23 @@ form {
   max-height: 32px;
   border-radius: 4px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 .page__footer button.btn-primary {
-  border-color: #0ea5e9;
-  color: #0ea5e9;
+  width: auto;
+  font-size: 2vh;
+  padding: 16px 10px;
+  margin: 20px;
+  border: none;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 2.2px;
+  color: #291400;
+  background: #dda432;
+  cursor: pointer;
+  box-shadow: 0px 10px 40px -12px #70541c;
 }
 </style>
