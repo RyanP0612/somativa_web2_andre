@@ -3,7 +3,7 @@
 
     // acessamos o mecanismo de rotas do NUXT
     const route = useRoute();
-    const {data: livroFound} = await useFetch(`http://localhost:8000/livros/${route.params.id}`,{
+    const {data: livroFound} = await useFetch(`http://localhost:8000/api/auth/livros/${route.params.id}`,{
       key: 'tarefaRequest' 
     });
 

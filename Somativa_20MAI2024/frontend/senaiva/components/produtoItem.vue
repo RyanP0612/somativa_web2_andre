@@ -1,13 +1,12 @@
 <template>
-  <section class="cartao flex flex-column align-items-center justify-content-center" v-if="true">
+  <section class="cartao flex flex-column align-items-center justify-content-center">
     <div class="check text-right">      
-      <!-- <Checkbox v-model=" :binary="true" :readonly="true"/> -->
+      <Checkbox class="checao" v-model="teste" :binary="true" :readonly="true"/>
     </div>
     <div class="produto-imagem">
       <img :src="produto.fotoFK" />
     </div>
     <div>
-      <!-- Adiciona a classe limite-linhas condicionalmente -->
       <h4 :class="{ 'limite-linhas': produto.titulo.length > 25 }" class="produto-nome">{{ produto.titulo }}</h4>
     </div>
     <div class="flex flex-row">
@@ -17,12 +16,14 @@
         <span>{{ produto.quantidade }} </span>
       </div>
     </div>
-    <Button class="botao-add" label="Adicionar"  />
+    <Button class="botao-add" label="Adicionar" />
   </section>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+
+
+import { defineProps, ref } from 'vue';
 
 type Livro = {
   id: number;
@@ -44,6 +45,7 @@ type Livro = {
   aprovado: string;
 };
 
+const teste = ref(true);
 const props = defineProps<{
   produto: Livro;
 }>();
@@ -54,7 +56,6 @@ const props = defineProps<{
   width: 350px;
   border: 3px solid #1a0e01; 
   height: 400px;
- 
   background-color: #5a2e01;
   border-radius: 15px;
   padding: 20px 10px;
@@ -62,17 +63,16 @@ const props = defineProps<{
   text-align: center;
   color: #dda432;
   font-weight: 800;
-  font-size: 1.2vw ;
+  font-size: 1.2vw;
   letter-spacing: 2px;
-  
   cursor: pointer;
   box-sizing: border-box;
+  transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
 
   &:hover {
     transform: scale(1.1);
-    transition: 2s;
     box-shadow: 0px 10px 40px #00000056;
-    border: 3px solid #dda432;
+    border-color: #dda432;
   }
 
   .produto-imagem {
@@ -94,17 +94,34 @@ const props = defineProps<{
 
   .botao-add {
     width: 80%;
-    height: 2rem;
-    margin: 1rem;
+    height: 2.5rem;
+    margin: 1rem 0;
+    background-color: #dda432;
+    color: #5a2e01;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      background-color: #ffd700;
+      color: #1a0e01;
+    }
   }
 
   .check {
-    width: 95%;
-  }
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+}
+.checao{
+  size: 60px;
+}
 
   .limite-linhas {
-    /* Define o número máximo de linhas para o título */
-    max-height: 3.6rem; /* Ajuste conforme necessário */
+    max-height: 3.6rem;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;

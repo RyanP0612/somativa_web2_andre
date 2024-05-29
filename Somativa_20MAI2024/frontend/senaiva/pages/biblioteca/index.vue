@@ -12,7 +12,6 @@ const { data } = await useFetch('http://localhost:8000/livros/?aprovado=P', {
 
 
 
-
 </script>
 <template>
     <div>

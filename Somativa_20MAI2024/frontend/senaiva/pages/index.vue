@@ -1,7 +1,47 @@
-<script setup>
+<script setup >
+
+import { reactive, ref } from 'vue';
+const { signIn } = useAuth();
+
 const libraria = () => {
   window.location.href = 'http://localhost:3000/livros';
 }
+
+definePageMeta({
+    layout: 'login'
+})
+
+
+
+const credenciais = reactive({
+    username: '',
+    password: ''
+});
+const mensagemErro = ref('');
+
+const fazerLogin = () => {
+    console.log("login: ", credenciais);
+    signIn(credenciais, { redirect: false })
+        .then(() => {
+            console.log("logado com sucesso....");
+            navigateTo('/livros');
+        })
+        .catch((error) => {
+            console.error("error: ", error);
+            console.error("aaaaa: ", mensagemErro);
+            mensagemErro.value = 'Não foi possível fazer o login com estas credenciais...';
+            setTimeout(() => {
+                mensagemErro.value = '';
+                credenciais.email = '';
+                credenciais.password = '';
+            }, 3000);
+        })
+}
+
+const painel = ref();
+
+
+
 </script>
 
 
@@ -17,15 +57,15 @@ const libraria = () => {
           <h1>LOGIN</h1>
           <div class="text-field">
             <label for="usuario">Usuário</label>
-            <input type="text" name="usuario" placeholder="Usuário">
+            <input v-model="credenciais.username" type="text" name="usuario" placeholder="Usuário">
             
           </div>
           <div class="text-field">
             <label for="senha">Senha</label>
-            <input type="password" name="senha" placeholder="Senha">
+            <input  v-model="credenciais.password" type="password" name="senha" placeholder="Senha">
             
           </div>
-          <button class="btn-login">Login</button>
+          <button @click="fazerLogin" class="btn-login">Login</button>
           
           <button @click="libraria" class="btn-login" >Ver livros</button>
         

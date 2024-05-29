@@ -1,3 +1,4 @@
+import { defineStore, CommitFunction } from 'vuex';
 import type { Livro } from "~/models/livros";
 
 export type CarrinhoItem = {
@@ -5,30 +6,59 @@ export type CarrinhoItem = {
     quantidade: number;
 }
 
-export type Carrinho = {
-    livros: Array<CarrinhoItem>;    
+export type CarrinhoState = {
+    livros: CarrinhoItem[];    
 }
 
-
-// export const carrinho = defineStore('carrinhoStore', {
-//     state: (): Carrinho => ({
-//         livros: []
-//     }),
-//     actions: {
-//       adicionarNoCarrinho(novoProduto: Livro){
-//             const produtoJaExiste = this.getProdutoDoCarrinho(novoProduto);
-//             if(produtoJaExiste){
-//                 produtoJaExiste.quantidade += 1;
-//                 this.livros = [
-//                     ...this.livros.filter(item=>item.produto.id !== produtoJaExiste.produto.id),
-//                     produtoJaExiste
-//                 ];
-//             }
-//             //produto não está no carrinho ainda
-//             else{
-//                 this.livros.push({
-//                     quantidade: 1,
-//                     produto: novoProduto
-//                 });
-//             }
-//       },}})
+export const carrinho = defineStore({
+    state: (): CarrinhoState => ({
+        livros: []
+    }),
+    actions: {
+        adicionarNoCarrinho({ state, commit }: { state: CarrinhoState; commit: CommitFunction }, novoLivro: Livro) {
+            const livroJaExiste = state.livros.find(item => item.livro.id === novoLivro.id);
+            if (livroJaExiste) {
+                commit('incrementarQuantidade', livroJaExiste);
+            } else {
+                commit('adicionarLivro', novoLivro);
+            }
+        },
+        removerDoCarinho({ state, commit }: { state: CarrinhoState; commit: CommitFunction }, carrinhoItem: CarrinhoItem) {
+            const posicaoNoCarrinho = state.livros.findIndex(item => item.livro.id === carrinhoItem.livro.id);
+            if (posicaoNoCarrinho !== -1) {
+                commit('removerLivro', posicaoNoCarrinho);
+            }
+        },
+        esvaziarCarrinho({ commit }: { commit: CommitFunction }) {
+            commit('esvaziarCarrinho');
+        }
+    },
+    mutations: {
+        adicionarLivro(state: CarrinhoState, novoLivro: Livro) {
+            state.livros.push({
+                quantidade: 1,
+                livro: novoLivro
+            });
+        },
+        incrementarQuantidade(state: CarrinhoState, carrinhoItem: CarrinhoItem) {
+            carrinhoItem.quantidade++;
+        },
+        removerLivro(state: CarrinhoState, posicao: number) {
+            state.livros.splice(posicao, 1);
+        },
+        esvaziarCarrinho(state: CarrinhoState) {
+            state.livros = [];
+        }
+    },
+    getters: {
+        estaNoCarrinho(state: CarrinhoState) {
+            return (livroParaEncontrar: Livro) => state.livros.some(item => item.livro.id === livroParaEncontrar.id);
+        },
+        getLivroDoCarrinho(state: CarrinhoState) {
+            return (livroParaEncontrar: Livro) => state.livros.find(item => item.livro.id === livroParaEncontrar.id);
+        },
+        getValorTotalDoCarrinho(state: CarrinhoState) {
+            return state.livros.reduce((total, item) => total + (item.livro.valor * item.quantidade), 0);
+        }
+    }
+});

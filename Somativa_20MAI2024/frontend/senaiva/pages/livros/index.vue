@@ -11,7 +11,7 @@ function removeAccents(str) {
 }
 
 // Fazendo a requisição para obter os dados dos livros
-const { data: livros } = await useFetch('http://localhost:8000/livros/', {
+const { data: livros } = await useFetch('http://localhost:8000/api/auth/livros/?aprovado=A', {
   key: 'livrosRequest',
 });
 

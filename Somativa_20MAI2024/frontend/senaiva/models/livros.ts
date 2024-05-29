@@ -8,8 +8,8 @@ export type Livro = {
     descricao: string;
     editora: string;
     idade: string;
-    dataLancamento: string; // assumindo que a data será uma string no formato ISO
-    publicacao: string;     // assumindo que a data será uma string no formato ISO
+    dataLancamento: string; 
+    publicacao: string;     
     categoria: string;
     fotoFK: string;
     numeroPaginas: number;

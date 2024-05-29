@@ -78,7 +78,7 @@ const handleSubmit = async () => {
     console.log('Formulário válido:', livro.value);
     
     try {
-      const response = await fetch('http://localhost:8000/livros/', {
+      const response = await fetch('http://localhost:8000/api/auth/livros/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

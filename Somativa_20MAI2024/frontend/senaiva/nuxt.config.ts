@@ -1,17 +1,28 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  typescript: {
+    typeCheck: true
+  },
   
   modules: [
     'nuxt-primevue',
-    'vue3-carousel-nuxt'
+    'vue3-carousel-nuxt',
+    '@sidebase/nuxt-auth'
   ],
   carousel: {
     prefix: 'MyPrefix'
   },
   primevue: {
     components: {
-      include: ['carousel', 'Carousel', 'toast', 'Toast']
+      include: ['carousel', 'Carousel', 'toast', 'Toast','Checkbox']
+    }
+  },
+  vite: {
+    server: {
+      fs: {
+        strict: false
+      }
     }
   },
 
@@ -22,6 +33,21 @@ css: [
 ],
 plugins: [
   '@/plugins/primevue' // Importa e registra o PrimeVue globalmente
-]
-
+],
+auth: {
+  baseURL: 'http://localhost:8000',
+  provider: {
+    type: 'local',
+    endpoints: {
+      signIn: { path: '/token/login', method: 'post' },
+      signOut: { path: '/token/logout', method: 'post' },
+      getSession: { path: '/usuarios', method: 'get' },
+    },
+    token: { signInResponseTokenPointer: '/auth_token', type: 'Token' },
+    pages: { login: '/' },
+    sessionDataType: {
+      results: 'Array'
+    }
+  }
+}
 })
