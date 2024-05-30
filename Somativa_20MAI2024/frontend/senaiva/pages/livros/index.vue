@@ -27,7 +27,7 @@ const filteredBooks = livros.value.filter(livro =>
     <div>
         <div class="tela">
       <CustomLayout />
-      <h2 >🥃 Nossos MELHORES livros💖</h2>
+      <h2 >Nossos MELHORES livros💖</h2>
         <Carousel :value="filteredBooksCarousel" :numVisible="4" :numScroll="1" :responsiveOptions="responsiveOptions" >
           <template #item="{ data: livro }">
             <div class="border-1 surface-border border-round m-2 p-3 car-card">
@@ -54,11 +54,11 @@ const filteredBooks = livros.value.filter(livro =>
             </div>
           </template>
         </Carousel>
-        <h2 >🥃 Nossos Produtos</h2>
+        <h2 >Nossos Produtos</h2>
         <div class="home-container flex  align-items-center">
         
         <Toast />
-        <div v-for="(produto,index)  in livros" :key="produto.id" >
+        <div v-for="(produto,index)  in filteredBooks" :key="produto.id" >
           <NuxtLink :to="`/livros/${produto.id}`">
             <ProdutoItem :key="index" class="col-3" :produto="produto" @eventoAdicionado="show" />
           </NuxtLink>

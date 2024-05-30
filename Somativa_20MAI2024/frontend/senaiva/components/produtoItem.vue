@@ -103,7 +103,7 @@ const props = defineProps<{
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
-
+    // box-sizing: border-box;
     &:hover {
       background-color: #ffd700;
       color: #1a0e01;

@@ -92,6 +92,7 @@ class EmprestimoView(ModelViewSet):
 class LivrosView(ModelViewSet):
     queryset = Livros.objects.all() 
     serializer_class = LivrosSerializer
+    
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():

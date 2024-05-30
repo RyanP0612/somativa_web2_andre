@@ -16,10 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from emprestimo.views import LivrosView
+
+router = DefaultRouter()
+router.register(r'livros', LivrosView, basename='livros')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
      path('api/auth/', include('emprestimo.urls')),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
+    path('', include(router.urls)), 
 ]

@@ -10,7 +10,7 @@
         </NuxtLink>
         <br>
         <NuxtLink to="/livros" exact :key="$route.path">
-          <button class="btn-primary" id="livros-button" @click="reloadPage">Livros</button>
+          <button class="btn-primary" id="livros-button">Livros</button>
         </NuxtLink>
         <br>
         <NuxtLink to="/biblioteca" exact :key="$route.path">
