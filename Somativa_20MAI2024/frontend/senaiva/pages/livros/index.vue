@@ -5,22 +5,54 @@ import 'primevue/resources/themes/saga-blue/theme.css'; // Tema do PrimeVue
 import 'primevue/resources/primevue.min.css'; // Estilos gerais do PrimeVue
 import 'primeicons/primeicons.css'; // Ícones do PrimeIcons
 
+const livros = ref([]);
+
 // Função para remover acentos
 function removeAccents(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// Fazendo a requisição para obter os dados dos livros
-const { data: livros } = await useFetch('http://localhost:8000/api/auth/livros/?aprovado=A', {
-  key: 'livrosRequest',
+async function fetchBooks() {
+  try {
+    // Tenta fazer a requisição para a primeira URL
+    const { data: livrosResponse } = await useFetch('http://localhost:8000/api/auth/livros/?aprovado=A', {
+      key: 'livrosRequest',
+    });
+    livros.value = livrosResponse.value;
+  } catch (firstError) {
+    console.error("Erro na primeira requisição:", firstError);
+
+    try {
+      // Caso a primeira requisição falhe, tenta a segunda URL
+      const { data: livrosResponse } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
+        key: 'livrosRequestFallback',
+      });
+      livros.value = livrosResponse.value;
+    } catch (secondError) {
+      console.error("Erro na segunda requisição:", secondError);
+
+      // Se a segunda requisição também falhar, lança um erro
+      throw new Error("Ambas as requisições falharam.");
+    }
+  }
+}
+
+// Chama a função para buscar os livros ao montar o componente
+fetchBooks().catch(error => {
+  console.error("Erro ao buscar livros:", error);
 });
 
 // Filtrando os livros que contêm "leticia" no título (com ou sem acentos, maiúsculas ou minúsculas)
-const filteredBooksCarousel = livros.value.filter(livro => 
-  removeAccents(livro.titulo).toLowerCase().includes('leticia')
+const filteredBooksCarousel = computed(() => 
+  livros.value.filter(livro => 
+    removeAccents(livro.titulo).toLowerCase().includes('leticia')
+  )
 );
-const filteredBooks = livros.value.filter(livro => 
-  !removeAccents(livro.titulo).toLowerCase().includes('leticia')
+
+const filteredBooks = computed(() => 
+  livros.value.filter(livro => 
+    !removeAccents(livro.titulo).toLowerCase().includes('leticia')
+  )
 );
 </script>
 <template>

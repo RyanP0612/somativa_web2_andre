@@ -36,16 +36,15 @@ class LivrosSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EmprestimoSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Emprestimo
-        fields = '__all__'
-        many = True
-
+        fields = '__all__'  # Incluir todos os campos do modelo Emprestimo
+        many = True  # Indicar que não é uma relação muitos-para-muitos
 
 class EmprestimoLivrosSerializer(serializers.ModelSerializer):
-    livroFK = LivrosSerializer
-
+    class Meta:
+        model = EmprestimoLivros
+        fields = ['emprestimoFK', 'livroFK', 'quantidade']  # Inclua os campos necessários aqui
     class Meta:
         many = True
         model = EmprestimoLivros

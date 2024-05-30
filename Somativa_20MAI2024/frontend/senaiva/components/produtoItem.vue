@@ -1,7 +1,7 @@
 <template>
   <section class="cartao flex flex-column align-items-center justify-content-center">
     <div class="check text-right">      
-      <Checkbox class="checao" v-model="teste" :binary="true" :readonly="true"/>
+      <Checkbox v-model="teste" :binary="true" :readonly="true"/>
     </div>
     <div class="produto-imagem">
       <img :src="produto.fotoFK" />
@@ -16,39 +16,42 @@
         <span>{{ produto.quantidade }} </span>
       </div>
     </div>
-    <Button class="botao-add" label="Adicionar" />
+    <Button  class="botao-add" label="Adicionar" />
+
   </section>
 </template>
 
 <script setup lang="ts">
 
 
-import { defineProps, ref } from 'vue';
+import { computed, defineProps, ref } from 'vue';
+// import { computed } from "#imports";
+import { type Livro } from "../models/livros";
+// import { carrinho } from "../stores/carrinho";
+// const { adicionarNoCarrinho, getCarrinho, estaNoCarrinho } = carrinho();
 
-type Livro = {
-  id: number;
-  titulo: string;
-  nota: number;
-  valor: number;
-  quantidade: number;
-  autor: string;
-  descricao: string;
-  editora: string;
-  idade: string;
-  dataLancamento: string;
-  publicacao: string;
-  categoria: string;
-  fotoFK: string;
-  numeroPaginas: number;
-  formato: string;
-  codEdicao: string;
-  aprovado: string;
+
+type propType = {
+  produto: Livro;
 };
 
-const teste = ref(true);
-const props = defineProps<{
-  produto: Livro;
-}>();
+const props = defineProps<propType>();
+
+const emit = defineEmits(['eventoAdicionado']); 
+
+// const adicionarItem = () => {
+//   adicionarNoCarrinho(props.produto);
+//   emit('eventoAdicionado');
+//   console.log("CARRINHO ATUAL: ", getCarrinho());
+// }
+
+let teste = ref(false);
+
+const produtoNoCarrinho = computed(()=>{
+  
+  return teste!;   
+});
+
 </script>
 
 <style scoped lang="scss">

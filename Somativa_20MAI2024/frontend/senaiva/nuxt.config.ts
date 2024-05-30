@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     'nuxt-primevue',
     'vue3-carousel-nuxt',
     '@sidebase/nuxt-auth'
+    // '@pinia/nuxt'
   ],
   carousel: {
     prefix: 'MyPrefix'

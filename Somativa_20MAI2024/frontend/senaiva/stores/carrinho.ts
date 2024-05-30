@@ -1,64 +1,72 @@
-// import { defineStore, CommitFunction } from 'vuex';
+// import { defineStore } from "pinia";
 // import type { Livro } from "~/models/livros";
 
 // export type CarrinhoItem = {
-//     livro: Livro;
+//     produto: Livro;
 //     quantidade: number;
 // }
 
-// export type CarrinhoState = {
-//     livros: CarrinhoItem[];    
+// export type Carrinho = {
+//     produtos: Array<CarrinhoItem>;    
 // }
 
-// export const carrinho = defineStore({
-//     state: (): CarrinhoState => ({
-//         livros: []
+// export const carrinho = defineStore('carrinhoStore', {
+//     state: (): Carrinho => ({
+//         produtos: []
 //     }),
 //     actions: {
-//         adicionarNoCarrinho({ state, commit }: { state: CarrinhoState; commit: CommitFunction }, novoLivro: Livro) {
-//             const livroJaExiste = state.livros.find(item => item.livro.id === novoLivro.id);
-//             if (livroJaExiste) {
-//                 commit('incrementarQuantidade', livroJaExiste);
-//             } else {
-//                 commit('adicionarLivro', novoLivro);
+//       adicionarNoCarrinho(novoProduto: Livro){
+//             const produtoJaExiste = this.getProdutoDoCarrinho(novoProduto);
+//             if(produtoJaExiste){
+//                 produtoJaExiste.quantidade += 1;
+//                 this.produtos = [
+//                     ...this.produtos.filter(item=>item.produto.id !== produtoJaExiste.produto.id),
+//                     produtoJaExiste
+//                 ];
 //             }
-//         },
-//         removerDoCarinho({ state, commit }: { state: CarrinhoState; commit: CommitFunction }, carrinhoItem: CarrinhoItem) {
-//             const posicaoNoCarrinho = state.livros.findIndex(item => item.livro.id === carrinhoItem.livro.id);
-//             if (posicaoNoCarrinho !== -1) {
-//                 commit('removerLivro', posicaoNoCarrinho);
+//             //produto não está no carrinho ainda
+//             else{
+//                 this.produtos.push({
+//                     quantidade: 1,
+//                     produto: novoProduto
+//                 });
 //             }
-//         },
-//         esvaziarCarrinho({ commit }: { commit: CommitFunction }) {
-//             commit('esvaziarCarrinho');
+//       },
+//       removerDoCarinho(carrinhoItem: CarrinhoItem){
+//         const posicaoNoCarrinho = this.getProdutoDoCarrinhoIndex(carrinhoItem.produto);
+//         //remover o item inteiro do carrinho
+//         this.produtos.splice(posicaoNoCarrinho,1);
+
+//         if(carrinhoItem.quantidade){
+//             this.produtos = [
+//                 ...this.produtos,
+//                 carrinhoItem
+//             ];
 //         }
-//     },
-//     mutations: {
-//         adicionarLivro(state: CarrinhoState, novoLivro: Livro) {
-//             state.livros.push({
-//                 quantidade: 1,
-//                 livro: novoLivro
-//             });
-//         },
-//         incrementarQuantidade(state: CarrinhoState, carrinhoItem: CarrinhoItem) {
-//             carrinhoItem.quantidade++;
-//         },
-//         removerLivro(state: CarrinhoState, posicao: number) {
-//             state.livros.splice(posicao, 1);
-//         },
-//         esvaziarCarrinho(state: CarrinhoState) {
-//             state.livros = [];
-//         }
+//       },
+//       esvaziarCarrinho(){
+//         this.produtos = [];
+//       }
 //     },
 //     getters: {
-//         estaNoCarrinho(state: CarrinhoState) {
-//             return (livroParaEncontrar: Livro) => state.livros.some(item => item.livro.id === livroParaEncontrar.id);
+//         estaNoCarrinho: (carrinho:Carrinho) => (produtoParaEncontrar: Livro): boolean =>{
+//             return carrinho.produtos.findIndex(item=>item.produto.id === produtoParaEncontrar.id) !== -1;
 //         },
-//         getLivroDoCarrinho(state: CarrinhoState) {
-//             return (livroParaEncontrar: Livro) => state.livros.find(item => item.livro.id === livroParaEncontrar.id);
+//         getProdutoDoCarrinho: (carrinho:Carrinho) => (produtoParaEncontrar: Livro)=>{
+//             return carrinho.produtos.find(item=>item.produto.id === produtoParaEncontrar.id);
 //         },
-//         getValorTotalDoCarrinho(state: CarrinhoState) {
-//             return state.livros.reduce((total, item) => total + (item.livro.valor * item.quantidade), 0);
+//         getProdutoDoCarrinhoIndex: (carrinho:Carrinho) => (produtoParaEncontrar: Livro)=>{
+//             return carrinho.produtos.findIndex(item=>item.produto.id === produtoParaEncontrar.id);
+//         },
+//         getCarrinho: (carrinho: Carrinho) => () : Array<CarrinhoItem> => {
+//             return carrinho.produtos;
+//         },
+//         getValorTotalDoCarrinho: (carrinho: Carrinho) => () : Number => {
+//             let soma = 0;
+//             carrinho.produtos.forEach(item=>{
+//                 soma += (item.produto.valor * item.quantidade)
+//             })
+//             return soma;
 //         }
 //     }
-// });
+//   })

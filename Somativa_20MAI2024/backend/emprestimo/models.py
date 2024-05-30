@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
@@ -109,16 +111,23 @@ STATUS_EMPRESTIMO = [
     ("C","CANCELADO"),
 ]
 
-
 class Emprestimo(models.Model):
     usuarioFK = models.ForeignKey(UsuarioCustomizado, related_name='usuarioEmprestimo0', on_delete=models.CASCADE)
     dataEmprestimo = models.DateField(auto_now_add=True)
-    devolucaoPrevista = models.DateField() #duas semanas depois da data emprestimo
+    devolucaoPrevista = models.DateField(null=True, blank=True)  # Permitir que seja nulo
     dataDevolucao = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_EMPRESTIMO, default='P')
 
     def __str__(self):
-            return self.status
+        return self.status
+
+    def save(self, *args, **kwargs):
+        if not self.devolucaoPrevista:
+            if self.dataEmprestimo:  # Verifica se a data de empréstimo está definida
+                self.devolucaoPrevista = self.dataEmprestimo + timedelta(weeks=2)
+            else:
+                self.devolucaoPrevista = timezone.now().date() + timedelta(weeks=2)  # Use a data atual como fallback
+        super().save(*args, **kwargs)
 
 class EmprestimoLivros(models.Model):
      livroFK = models.ForeignKey(Livros, related_name='Emprestimo_livr0o', on_delete=models.CASCADE)

@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.db import transaction
 # class CustomModelViewSet(ModelViewSet):
 #     # Define uma nova classe chamada `CustomModelViewSet` que herda de `ModelViewSet`.
 #     # `ModelViewSet` é uma classe do Django REST framework que fornece ações padrão para criar, recuperar, atualizar e deletar instâncias de um modelo.
@@ -48,14 +48,16 @@ class UsuarioCustomizadoView(ModelViewSet):
         return queryset
 
 
+
 class EmprestimoLivrosView(ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    queryset = EmprestimoLivros.objects.all()
+    serializer_class = EmprestimoLivrosSerializer
 
     def create(self, request, *args, **kwargs):
         user = request.user
         emprestimoAtivo = Emprestimo.objects.filter(usuarioFK=user, dataDevolucao__isnull=True).count()
         if emprestimoAtivo >= 3:
-            return Response({'error': 'Você já possui 3 empréstimos corintiano ladrao'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Você já possui 3 empréstimos ativos'}, status=status.HTTP_400_BAD_REQUEST)
         
         livro_id = request.data.get('livro_id')
         try:
@@ -64,28 +66,27 @@ class EmprestimoLivrosView(ModelViewSet):
             return Response({'error': 'Livro não disponível ou não encontrado'}, status=status.HTTP_404_NOT_FOUND)
         
         if livro.quantidade > 0:
-            # Crie o empréstimo (Emprestimo) se necessário
-            emprestimo, created = Emprestimo.objects.get_or_create(usuarioFK=user, dataDevolucao__isnull=True, defaults={'devolucaoPrevista': (datetime.date.today() + datetime.timedelta(weeks=2))})
+            with transaction.atomic():  # Usando uma transação atômica
+                emprestimo, created = Emprestimo.objects.get_or_create(usuarioFK=user, dataDevolucao__isnull=True, defaults={'devolucaoPrevista': (datetime.date.today() + datetime.timedelta(weeks=2))})
 
-            # Crie o registro de EmprestimoLivros
-            emprestimo_livro = EmprestimoLivros.objects.create(emprestimoFK=emprestimo, livroFK=livro, quantidade=1)
-            livro.quantidade = livro.quantidade - 1
-            livro.save()
+                emprestimo_livro_data = {'emprestimoFK': emprestimo.id, 'livroFK': livro.id, 'quantidade': 1}
+                serializer = EmprestimoLivrosSerializer(data=emprestimo_livro_data)
 
-            serializer = EmprestimoLivrosSerializer(emprestimo_livro)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                if serializer.is_valid():
+                    serializer.save()
+
+                    # Decrementa a quantidade de livros após salvar o empréstimo
+                    livro.quantidade = livro.quantidade - 1
+                    livro.save()
+
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': 'Quantidade do livro insuficiente'}, status=status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        emprestimos = Emprestimo.objects.filter(usuarioFK=user, dataDevolucao__isnull=True)
-        serializer = EmprestimoSerializer(emprestimos, many=True)
-        return Response(serializer.data)
-
     
 class EmprestimoView(ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     queryset = Emprestimo.objects.all() 
     serializer_class = EmprestimoSerializer
     
