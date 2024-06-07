@@ -4,7 +4,7 @@ import { reactive, ref } from 'vue';
 const { signIn } = useAuth();
 
 const libraria = () => {
-  window.location.href = 'http://localhost:3000/livros';
+  window.location.href = 'https://somativa-web2-andre.vercel.app/livros';
 }
 
 const teste = ref(false); 

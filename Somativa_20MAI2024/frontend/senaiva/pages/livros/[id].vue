@@ -1,11 +1,33 @@
 <script setup>
-
+const livroFound = ref([]);
 
     // acessamos o mecanismo de rotas do NUXT
     const route = useRoute();
-    const {data: livroFound} = await useFetch(`http://localhost:8000/api/auth/livros/${route.params.id}`,{
+    
+    async function fetchBooks() {
+  try {
+    // Tenta fazer a requisição para a primeira URL
+    const {data: livrosResponse} = await useFetch(`https://somativaweb2andre-production.up.railway.app/api/auth/livros/${route.params.id}`,{
       key: 'tarefaRequest' 
     });
+    livroFound.value = livrosResponse.value;
+  } catch (firstError) {
+    console.error("Erro na primeira requisição:", firstError);
+
+    try {
+      // Caso a primeira requisição falhe, tenta a segunda URL
+      const { data: livrosResponse } = await useFetch(`https://somativaweb2andre-production.up.railway.app/livros/${route.params.id}`, {
+        key: 'livrosRequestFallback',
+      });
+      livroFound.value = livrosResponse.value;
+    } catch (secondError) {
+      console.error("Erro na segunda requisição:", secondError);
+
+      // Se a segunda requisição também falhar, lança um erro
+      throw new Error("Ambas as requisições falharam.");
+    }
+  }
+}
 
 
     const paramsID = await route.params.id
