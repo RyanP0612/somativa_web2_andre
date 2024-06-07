@@ -7,7 +7,12 @@ const libraria = () => {
   window.location.href = 'http://localhost:3000/livros';
 }
 
+const teste = ref(false); 
 
+const bot = () =>
+{
+    teste.value = !teste.value; 
+}
 
 
 
@@ -66,6 +71,17 @@ const painel = ref();
           <button @click="fazerLogin" class="btn-login">Login</button>
           
           <button @click="libraria" class="btn-login" >Ver livros</button>
+          <button @click="bot" class="btn-login" >BOT🤖</button>
+          <div v-if="teste">
+            <iframe
+    allow="microphone;"
+    width="350"
+    height="430"
+    src="https://console.dialogflow.com/api-client/demo/embedded/1a42e1f4-c0cc-42e7-ab38-e9a2067df8e2">
+</iframe>
+          </div>
+          
+      
         
         </div>
 
