@@ -15,7 +15,7 @@ function removeAccents(str) {
 async function fetchBooks() {
   try {
     // Tenta fazer a requisição para a primeira URL
-    const { data: livrosResponse } = await useFetch('http://localhost:8000/api/auth/livros/?aprovado=A', {
+    const { data: livrosResponse } = await useFetch('https://somativaweb2andre-production.up.railway.app/api/auth/livros/?aprovado=A', {
       key: 'livrosRequest',
     });
     livros.value = livrosResponse.value;
@@ -24,7 +24,7 @@ async function fetchBooks() {
 
     try {
       // Caso a primeira requisição falhe, tenta a segunda URL
-      const { data: livrosResponse } = await useFetch('http://localhost:8000/livros/?aprovado=A', {
+      const { data: livrosResponse } = await useFetch('https://somativaweb2andre-production.up.railway.app/livros/?aprovado=A', {
         key: 'livrosRequestFallback',
       });
       livros.value = livrosResponse.value;

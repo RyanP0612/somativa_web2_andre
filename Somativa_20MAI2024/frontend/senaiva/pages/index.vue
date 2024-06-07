@@ -56,6 +56,7 @@ const painel = ref();
         <img src="assets/img/logoInit.svg" class="left-login-img" alt="logo de uma mulher lendo">
       </div>
       <div class="right-login">
+        
         <div class="card-login">
           <h1>LOGIN</h1>
           <div class="text-field">
@@ -72,18 +73,19 @@ const painel = ref();
           
           <button @click="libraria" class="btn-login" >Ver livros</button>
           <button @click="bot" class="btn-login" >BOT🤖</button>
-          <div v-if="teste">
-            <iframe
-    allow="microphone;"
-    width="350"
-    height="430"
-    src="https://console.dialogflow.com/api-client/demo/embedded/1a42e1f4-c0cc-42e7-ab38-e9a2067df8e2">
-</iframe>
-          </div>
+          
           
       
         
         </div>
+        <div v-if="teste">
+            <iframe
+    allow="microphone;"
+    width="320"
+    height="350"
+    src="https://console.dialogflow.com/api-client/demo/embedded/1a42e1f4-c0cc-42e7-ab38-e9a2067df8e2">
+</iframe>
+          </div>
 
       </div>
        
@@ -130,12 +132,13 @@ padding: 20px 20px;
   align-items: center;
 }
 .card-login{
+  margin: 15px;
   width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 30px 35px;
+  padding: 10px 15px;
   background: #3a1d00;
   border-radius: 20px;
   box-shadow: 0px 10px 40px #00000056;
@@ -180,8 +183,8 @@ padding: 20px 20px;
 
 .btn-login{
   width: 100%;
-  padding: 16px 0px;
-  margin: 20px;
+  padding: 10px 0px;
+  margin: 10px;
   border: none;
   border-radius: 8px;
   box-sizing: border-box;
@@ -194,7 +197,7 @@ padding: 20px 20px;
   cursor: pointer;
   box-shadow: 0px 10px 40px -12px #70541c;
 }
-@media only screen and (max-width: 950px){
+@media only screen and (max-width: 850px){
   .card-login{
     width: 85%;
   }

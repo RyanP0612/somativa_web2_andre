@@ -36,7 +36,7 @@ plugins: [
   '@/plugins/primevue' // Importa e registra o PrimeVue globalmente
 ],
 auth: {
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://somativaweb2andre-production.up.railway.app',
   provider: {
     type: 'local',
     endpoints: {
