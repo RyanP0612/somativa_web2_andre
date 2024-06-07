@@ -29,7 +29,7 @@ const livroFound = ref([]);
   }
 }
 
-
+fetchBooks();
     const paramsID = await route.params.id
     
 </script>
