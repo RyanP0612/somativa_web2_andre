@@ -17,7 +17,7 @@
           <button class="btn-primary" id="autor-button" @click="reloadPage">bibliotecária</button>
         </NuxtLink>
       
-        <button @click="openLink('http://127.0.0.1:8000/admin')" class="btn-primary">⚙️</button>
+        <button @click="openLink('https://somativaweb2andre-production.up.railway.app/admin')" class="btn-primary">⚙️</button>
         <img class="ibagem" src="assets/img/logoInit.svg" alt="Profile Image">
       </div>
       <div class="section">
